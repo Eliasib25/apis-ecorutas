@@ -4,6 +4,7 @@ const registerController = require('../controllers/registerController');
 const updateProfileController = require('../controllers/updateProfileController');
 const seedController = require('../controllers/seedController');
 const zoneController = require('../controllers/zoneController');
+const reportController = require('../controllers/reportController');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -22,5 +23,9 @@ router.get('/seed', seedController.seed);
 
 // Listar zonas
 router.get('/zones', zoneController.list);
+
+// Reportes
+router.post('/reports', authMiddleware, reportController.createReport);
+router.get('/reports/types', reportController.getReportTypes);
 
 module.exports = router;
