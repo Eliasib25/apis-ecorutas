@@ -26,7 +26,7 @@ CREATE TABLE citizen (
 
 CREATE TABLE report (
   identification INT(11) NOT NULL AUTO_INCREMENT,
-  type ENUM('operacional', 'calidadservicio', 'administrativo', 'contaminacion') NOT NULL,
+  type ENUM('operacional', 'calidadservicio', 'administrativo', 'contaminacion', 'otro') NOT NULL,
   problem LONGTEXT NOT NULL,
   address VARCHAR(45) NOT NULL,
   date DATETIME NOT NULL,
