@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.1
+    container_name: ecorutas_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: ecorutas
+      MYSQL_USER: ecorutas
+      MYSQL_PASSWORD: ecorutas_password
+    ports:
+      - '3306:3306'
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./ecorutas-db.sql:/docker-entrypoint-initdb.d/ecorutas-db.sql:ro
+    networks:
+      - ecorutas_net
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecorutas_api
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PORT: 3000
+      DB_HOST: db
+      DB_USER: ecorutas
+      DB_PASSWORD: ecorutas_password
+      DB_NAME: ecorutas
+      DB_PORT: 3306
+      JWT_SECRET: your_jwt_secret
+    expose:
+      - '3000'
+    networks:
+      - ecorutas_net
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: ecorutas_nginx
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '8080:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - ecorutas_net
+
+volumes:
+  db_data:
+
+networks:
+  ecorutas_net:
+    driver: bridge
