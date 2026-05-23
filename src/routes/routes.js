@@ -28,4 +28,7 @@ router.get('/zones', zoneController.list);
 router.post('/reports', authMiddleware, reportController.createReport);
 router.get('/reports/types', reportController.getReportTypes);
 
+// Ruta para obtener los dias de las rutas.
+
+
 module.exports = router;
