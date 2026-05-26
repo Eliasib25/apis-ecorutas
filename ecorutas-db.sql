@@ -1,7 +1,7 @@
 CREATE TABLE route(
   identification INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(45) NOT NULL,
-  frecuency ENUM('L-M-V', 'M-J-S') NULL,
+  frecuency ENUM('Lun-Mie-Vie', 'Mar-Jue-Sab') NULL,
   startTime VARCHAR(45) NOT NULL,
   isActive VARCHAR(45) NOT NULL,
   PRIMARY KEY (identification));

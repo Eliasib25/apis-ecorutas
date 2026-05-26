@@ -5,6 +5,7 @@ const updateProfileController = require('../controllers/updateProfileController'
 const seedController = require('../controllers/seedController');
 const zoneController = require('../controllers/zoneController');
 const reportController = require('../controllers/reportController');
+const userRouteController = require('../controllers/userRouteController');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -27,6 +28,9 @@ router.get('/zones', zoneController.list);
 // Reportes
 router.post('/reports', authMiddleware, reportController.createReport);
 router.get('/reports/types', reportController.getReportTypes);
+
+// Ruta del usuario
+router.get('/user/route', authMiddleware, userRouteController.getUserRoute);
 
 // Ruta para obtener los dias de las rutas.
 

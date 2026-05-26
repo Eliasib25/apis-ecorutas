@@ -18,6 +18,20 @@ class Route {
       }
     }
   }
+
+  static async findByUser(identificationtype, identification) {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        'SELECT r.identification, r.name, r.frecuency, r.startTime, r.isActive FROM citizen c INNER JOIN route r ON r.identification = c.routesIdentification WHERE c.identificationtype = ? AND c.identification = ? LIMIT 1',
+        [identificationtype, identification]
+      );
+
+      return rows.length > 0 ? rows[0] : null;
+    } finally {
+      connection.release();
+    }
+  }
 }
 
 module.exports = Route;
