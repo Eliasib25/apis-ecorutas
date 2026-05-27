@@ -17,6 +17,19 @@ class User {
     }
   }
 
+  static async findByIdentification(identificationtype, identification) {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        'SELECT * FROM citizen WHERE identificationtype = ? AND identification = ? LIMIT 1',
+        [identificationtype, identification]
+      );
+      return rows.length > 0 ? rows[0] : null;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async findByUserName(userName) {
     const connection = await getConnection();
     try {

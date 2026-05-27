@@ -28,6 +28,14 @@ const registerController = {
         });
       }
 
+      user = await User.findByIdentification(identificationtype, identification);
+      if (user) {
+        return res.status(409).json({
+          success: false,
+          message: 'Ya existe un usuario con el mismo tipo de identificación y número de identificación'
+        });
+      }
+
       user = await User.findByEmail(email);
       if (user) {
         return res.status(409).json({
