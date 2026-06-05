@@ -35,6 +35,7 @@ npm install
 
 Importa el script `ecorutas-db.sql` en tu servidor MySQL. Este archivo crea la base de datos y las tablas necesarias.
 
+
 ### 3. Crear el archivo `.env`
 
 Copia `.env.example` como `.env` y completa los valores:
@@ -86,7 +87,9 @@ npm start
 
 El servidor quedará escuchando en `http://localhost:3000` (o el puerto definido en `PORT`).
 
-> **IMPORTANTE:** Esto es de manera local, para ello, debes iniciar un servicio de mysql ya sea usando XAMPP u otra herramienta y luego crear una base de datos (puedes llamarla **ecorutas**) en el motor MySQL (puedes usar WorkBench) y ejecutar el script sql: **ecorutas-db.sql** sobre la base de datos que creaste. 
+Luego de esto, debes hacer una petición **GET** al siguiente endpoint (puedes usar postman o directamente ejecutarlo en el navegador): `http://localhost:3000/api/seed`
+
+Esto anterior con el fin de poblar la base de datos y garantizar el correcto funcionamiento de los demás endpoints
 
 ---
 
