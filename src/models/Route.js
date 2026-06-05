@@ -32,6 +32,18 @@ class Route {
       connection.release();
     }
   }
+
+  static async getAllRoutes() {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        'SELECT identification, name, frecuency, startTime, isActive FROM route'
+      );
+      return rows;
+    } finally {
+      connection.release();
+    }
+  }
 }
 
 module.exports = Route;

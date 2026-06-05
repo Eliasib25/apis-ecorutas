@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulador de Rutas</title>
+    <style>
+      body { font-family: Arial, sans-serif; background: #f6f8fb; color: #1f2933; margin: 0; padding: 24px; }
+      h1 { margin-bottom: 16px; }
+      .routes { display: grid; gap: 16px; }
+      .route-card { background: #ffffff; border-radius: 12px; padding: 16px; box-shadow: 0 6px 18px rgba(31, 41, 51, 0.08); display: flex; flex-direction: column; gap: 12px; }
+      .route-header { display: flex; justify-content: space-between; align-items: center; }
+      .route-status { font-size: 12px; font-weight: 600; padding: 4px 8px; border-radius: 8px; background: #e9eef5; color: #52606d; }
+      .route-status.active { background: #d3f9d8; color: #2f9e44; }
+      .route-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 14px; }
+      .route-meta span { background: #f0f4f8; padding: 6px 10px; border-radius: 8px; }
+      .route-actions { display: flex; gap: 10px; }
+      button { border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+      .start-btn { background: #3b82f6; color: #ffffff; }
+      .stop-btn { background: #ef4444; color: #ffffff; }
+      .message { margin-top: 12px; font-size: 13px; color: #52606d; }
+    </style>
+  </head>
+  <body>
+    <h1>Simulador de Rutas</h1>
+    <div class="routes" id="routesContainer"></div>
+    <div class="message" id="message"></div>
+
+    <script>
+      const routes = __ROUTES__;
+      const container = document.getElementById('routesContainer');
+      const message = document.getElementById('message');
+      const activeRoutes = new Set();
+
+      const setMessage = (text) => {
+        message.textContent = text;
+      };
+
+      const renderRoutes = () => {
+        container.innerHTML = '';
+        routes.forEach((route) => {
+          const card = document.createElement('div');
+          card.className = 'route-card';
+
+          const header = document.createElement('div');
+          header.className = 'route-header';
+
+          const title = document.createElement('strong');
+          title.textContent = route.name;
+
+          const status = document.createElement('span');
+          status.className = 'route-status' + (activeRoutes.has(route.identification) ? ' active' : '');
+          status.textContent = activeRoutes.has(route.identification) ? 'ACTIVA' : 'INACTIVA';
+
+          header.appendChild(title);
+          header.appendChild(status);
+
+          const meta = document.createElement('div');
+          meta.className = 'route-meta';
+          meta.innerHTML = `
+            <span>Id: ${route.identification}</span>
+            <span>Frecuencia: ${route.frecuency || 'No definido'}</span>
+            <span>Hora de inicio: ${route.startTime}</span>
+          `;
+
+          const actions = document.createElement('div');
+          actions.className = 'route-actions';
+
+          const startBtn = document.createElement('button');
+          startBtn.className = 'start-btn';
+          startBtn.textContent = 'Iniciar';
+          startBtn.onclick = async () => {
+            await fetch(`/api/routes/${route.identification}/start`, { method: 'POST' });
+            activeRoutes.add(route.identification);
+            renderRoutes();
+            setMessage(`Simulacion iniciada para ${route.name}`);
+          };
+
+          const stopBtn = document.createElement('button');
+          stopBtn.className = 'stop-btn';
+          stopBtn.textContent = 'Detener';
+          stopBtn.onclick = async () => {
+            await fetch(`/api/routes/${route.identification}/stop`, { method: 'POST' });
+            activeRoutes.delete(route.identification);
+            renderRoutes();
+            setMessage(`Simulacion detenida para ${route.name}`);
+          };
+
+          actions.appendChild(startBtn);
+          actions.appendChild(stopBtn);
+
+          card.appendChild(header);
+          card.appendChild(meta);
+          card.appendChild(actions);
+          container.appendChild(card);
+        });
+      };
+
+      renderRoutes();
+    </script>
+  </body>
+</html>

@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const routes = require('./src/routes/routes');
+const { db } = require('./src/config/firebase');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,6 +26,15 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`✓ Servidor ejecutándose en puerto ${PORT}`);
   console.log(`✓ Base de datos: ${process.env.DB_NAME}@${process.env.DB_HOST}`);
+  db.ref('.info/connected').on('value', (snapshot) => {
+    if (snapshot.val() === true) {
+      console.log('✓ Firebase Realtime Database conectado');
+    } else {
+      console.warn('⚠ Firebase Realtime Database no reporta conexión');
+    }
+  }, (error) => {
+    console.error('✗ Error conectando a Firebase Realtime Database:', error.message);
+  });
 });
 
 module.exports = app;
