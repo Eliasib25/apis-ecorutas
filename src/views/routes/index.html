@@ -18,6 +18,7 @@
       button { border: none; padding: 10px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; }
       .start-btn { background: #3b82f6; color: #ffffff; }
       .stop-btn { background: #ef4444; color: #ffffff; }
+      .reminder-btn { background: #10b981; color: #ffffff; }
       .message { margin-top: 12px; font-size: 13px; color: #52606d; }
     </style>
   </head>
@@ -76,18 +77,36 @@
             setMessage(`Simulacion iniciada para ${route.name}`);
           };
 
-          const stopBtn = document.createElement('button');
-          stopBtn.className = 'stop-btn';
-          stopBtn.textContent = 'Detener';
-          stopBtn.onclick = async () => {
-            await fetch(`/api/routes/${route.identification}/stop`, { method: 'POST' });
-            activeRoutes.delete(route.identification);
-            renderRoutes();
-            setMessage(`Simulacion detenida para ${route.name}`);
-          };
+           const stopBtn = document.createElement('button');
+           stopBtn.className = 'stop-btn';
+           stopBtn.textContent = 'Detener';
+           stopBtn.onclick = async () => {
+             await fetch(`/api/routes/${route.identification}/stop`, { method: 'POST' });
+             activeRoutes.delete(route.identification);
+             renderRoutes();
+             setMessage(`Simulacion detenida para ${route.name}`);
+           };
 
-          actions.appendChild(startBtn);
-          actions.appendChild(stopBtn);
+           const reminderBtn = document.createElement('button');
+           reminderBtn.className = 'reminder-btn';
+           reminderBtn.textContent = 'Enviar Recordatorio';
+           reminderBtn.onclick = async () => {
+             try {
+               const response = await fetch(`/api/routes/${route.identification}/send-reminder`, { method: 'POST' });
+               const data = await response.json();
+               if (data.success) {
+                 setMessage(`✓ Recordatorio enviado a ${data.data.tokensCount} usuario(s) para ${route.name}`);
+               } else {
+                 setMessage(`✗ Error: ${data.message}`);
+               }
+             } catch (error) {
+               setMessage(`✗ Error al enviar recordatorio: ${error.message}`);
+             }
+           };
+
+           actions.appendChild(startBtn);
+           actions.appendChild(stopBtn);
+           actions.appendChild(reminderBtn);
 
           card.appendChild(header);
           card.appendChild(meta);

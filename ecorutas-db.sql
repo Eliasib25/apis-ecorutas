@@ -18,6 +18,7 @@ CREATE TABLE citizen (
   userName VARCHAR(45) NOT NULL,
   password VARCHAR(255) NOT NULL,
   routesIdentification INT NULL,
+  fcm_token VARCHAR(255) NULL,  
   PRIMARY KEY (identificationtype, identification),
   CONSTRAINT citizenroute
     FOREIGN KEY (routesIdentification)

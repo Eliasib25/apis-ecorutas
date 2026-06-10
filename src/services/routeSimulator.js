@@ -81,10 +81,10 @@ const start = async (routeId) => {
     } catch (error) {
       console.error('Error actualizando posicion en Firebase:', error);
     }
-  }, 5000);
+  }, 1000);
 
   timers.set(routeId, intervalId);
-
+ 
   return true;
 };
 

@@ -8,6 +8,8 @@ const reportController = require('../controllers/reportController');
 const userRouteController = require('../controllers/userRouteController');
 const routeController = require('../controllers/routeController');
 const routeViewController = require('../controllers/routeViewController');
+const userController = require('../controllers/userController');
+const reminderController = require('../controllers/reminderController');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -33,13 +35,15 @@ router.get('/reports/types', reportController.getReportTypes);
 
 // Ruta del usuario
 router.get('/user/route', authMiddleware, userRouteController.getUserRoute);
+router.post('/user/fcm-token', authMiddleware, userController.updateFCMToken);
 
 // Simulador de rutas
 router.get('/views/routes', routeViewController.renderRoutesView);
 router.post('/routes/:id/start', routeController.startRoute);
 router.post('/routes/:id/stop', routeController.stopRoute);
 
-// Ruta para obtener los dias de las rutas.
+// Notificaciones de recordatorio (demo)
+router.post('/routes/:routeId/send-reminder', reminderController.sendManualReminder);
 
 
 module.exports = router;
