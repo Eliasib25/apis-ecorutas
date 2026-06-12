@@ -12,7 +12,7 @@ const seedController = {
       const route1Id = await Route.create({
         identification: 1,
         name: 'Ruta 1',
-        frecuency: 'L-M-V',
+        frecuency: 'Lun-Mie-Vie',
         startTime: '08:00 a.m.',
         isActive: 'si'
       }, connection);
@@ -20,7 +20,7 @@ const seedController = {
       const route2Id = await Route.create({
         identification: 2,
         name: 'Ruta 2',
-        frecuency: 'M-J-S',
+        frecuency: 'Mar-Jue-Sab',
         startTime: '06:00 a.m.',
         isActive: 'si'
       }, connection);
