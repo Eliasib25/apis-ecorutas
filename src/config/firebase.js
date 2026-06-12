@@ -1,8 +1,6 @@
 const admin = require('firebase-admin');
-const path = require('path');
 
-const credentialsPath = path.join(__dirname, 'firebase-credentials.json');
-const serviceAccount = require(credentialsPath);
+const serviceAccount = JSON.parse(process.env.FIREBASE_CREDENTIALS);
 
 const databaseURL = process.env.FIREBASE_DATABASE_URL
   // || `https://${serviceAccount.project_id}.firebaseio.com`;

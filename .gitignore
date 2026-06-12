@@ -6,3 +6,6 @@ node_modules
 
 # firebase credentials
 firebase-credentials.json
+
+# mcp 
+opencode.json
