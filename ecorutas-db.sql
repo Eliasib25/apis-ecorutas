@@ -19,8 +19,8 @@ CREATE TABLE citizen (
   password VARCHAR(255) NOT NULL,
   routesIdentification INT NULL,
   fcm_token VARCHAR(255) NULL,  
-  last_latitude DECIMAL NULL,
-  last_longitude DECIMAL NULL,
+  last_latitude DECIMAL(10, 8) NULL,
+  last_longitude DECIMAL(11, 8) NULL,
   PRIMARY KEY (identificationtype, identification),
   CONSTRAINT citizenroute
     FOREIGN KEY (routesIdentification)
