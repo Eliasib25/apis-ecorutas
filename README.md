@@ -42,20 +42,35 @@ Copia `.env.example` como `.env` y completa los valores:
 
 ```env
 # Servidor
-PORT=3000
+PORT=tu_puerto
 
 # Base de datos MySQL
-DB_HOST=localhost
+DB_HOST=tu_host
 DB_USER=tu_usuario
 DB_PASSWORD=tu_contraseña
-DB_NAME=ecorutas
-DB_PORT=3306
+DB_NAME=nombre_tu_base_datos
+DB_PORT=tu_puerto
 
 # JWT
 JWT_SECRET=tu_clave_secreta
 
 # Firebase Realtime Database
 FIREBASE_DATABASE_URL=https://tu-proyecto.firebaseio.com
+
+##Firebase credentials
+FIREBASE_CREDENTIALS = {
+  "type": "tu-tipo-de-credencial",
+  "project_id": "tu-id-de-proyecto",
+  "private_key_id": "tu-id-de-clave-privada",
+  "private_key": "-----BEGIN PRIVATE KEY-----\ntu-clave-privada-aqui\n-----END PRIVATE KEY-----",
+  "client_email": "tu-firebase-client-email",
+  "client_id": "tu-firebase-client-id",
+  "auth_uri": "tu-firebase-auth-uri",
+  "token_uri": "tu-firebase-token-uri",
+  "auth_provider_x509_cert_url": "tu-firebase-auth-provider-cert-url",
+  "client_x509_cert_url": "tu-firebase-client-cert-url",
+  "universe_domain": "tu-firebase-universe-domain"
+}
 ```
 **Proyecto Firebase:**
 
@@ -65,9 +80,7 @@ https://console.firebase.google.com/project/routes-9acfa/overview?hl=es-419
 
 Esta última (FIREBASE_DATABASE_URL), la encuentras en la sección de categorías de producto (en el menú), bases de datos y almacenamiento, Realtime Database, en la tab de datos. Es un enlace similar a este: **https://tu-basedatos-9rfg-defautl-rtdb.firebaseio.com** 
 
-> **Importante:** las credenciales de Firebase deben colocarse en `src/config/firebase-credentials.json` para que el SDK de `firebase-admin` pueda autenticarse.
-
-Para las credenciales, debes dirigirte a configuración y luego a cuentas de servicio, luego en la tab de SDK de Firebase Admin dar clic en el botón **generar nueva clave privada**. Eso iniciará la descarga del archivo de credenciales, el cual debes renombrar a firebase-credentials.json y pegarlo en la ruta mencionada. 
+Para las credenciales, debes dirigirte a configuración y luego a cuentas de servicio, luego en la tab de SDK de Firebase Admin dar clic en el botón **generar nueva clave privada**. Eso iniciará la descarga del archivo de credenciales, abrelo y pega cada una de las credenciales en el archivo .env en FIREBASE_CRDENTIALS 
 
 ---
 
