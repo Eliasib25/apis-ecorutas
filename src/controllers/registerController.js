@@ -17,7 +17,7 @@ const generateToken = (user) => {
 const registerController = {
   register: async (req, res) => {
     try {
-      const { identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password } = req.body;
+      const { identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password, lat, lng } = req.body;
 
       // Validaciones solo del backend: verificar unicidad en BD
       let user = await User.findByUserName(userName);
@@ -64,7 +64,9 @@ const registerController = {
         neighborhood,
         userName,
         password,
-        routesIdentification: routeId
+        routesIdentification: routeId,
+        last_latitude: lat || null,
+        last_longitude: lng || null
       });
 
       // Generar token

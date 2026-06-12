@@ -77,8 +77,8 @@ class User {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
 
       const [result] = await connection.query(
-        'INSERT INTO citizen (identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password, routesIdentification) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [userData.identificationtype, userData.identification, userData.names, userData.lastnames, userData.email, userData.phone, userData.address, userData.neighborhood, userData.userName, hashedPassword, userData.routesIdentification]
+        'INSERT INTO citizen (identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password, routesIdentification, last_latitude, last_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [userData.identificationtype, userData.identification, userData.names, userData.lastnames, userData.email, userData.phone, userData.address, userData.neighborhood, userData.userName, hashedPassword, userData.routesIdentification, userData.last_latitude || null, userData.last_longitude || null]
       );
 
       return {
@@ -91,7 +91,9 @@ class User {
         address: userData.address,
         neighborhood: userData.neighborhood,
         userName: userData.userName,
-        routesIdentification: userData.routesIdentification
+        routesIdentification: userData.routesIdentification,
+        last_latitude: userData.last_latitude || null,
+        last_longitude: userData.last_longitude || null
       };
     } finally {
       connection.release();

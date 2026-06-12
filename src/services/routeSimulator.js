@@ -109,7 +109,12 @@ const stop = async (routeId) => {
   return true;
 };
 
+const getActiveRouteIds = () => {
+  return Array.from(timers.keys());
+};
+
 module.exports = {
   start,
-  stop
+  stop,
+  getActiveRouteIds
 };

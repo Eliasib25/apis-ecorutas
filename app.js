@@ -3,6 +3,7 @@ const express = require('express');
 const routes = require('./src/routes/routes');
 const { db } = require('./src/config/firebase');
 const { scheduleReminderNotifications } = require('./src/services/reminderNotification');
+const { startProximityChecker } = require('./src/services/proximityNotification');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,9 @@ app.listen(PORT, () => {
   
   // Iniciar servicio de recordatorios
   scheduleReminderNotifications();
+
+  // Iniciar servicio de notificaciones de proximidad
+  startProximityChecker();
   
   db.ref('.info/connected').on('value', (snapshot) => {
     if (snapshot.val() === true) {
