@@ -80,7 +80,7 @@ https://console.firebase.google.com/project/routes-9acfa/overview?hl=es-419
 
 Esta última (FIREBASE_DATABASE_URL), la encuentras en la sección de categorías de producto (en el menú), bases de datos y almacenamiento, Realtime Database, en la tab de datos. Es un enlace similar a este: **https://tu-basedatos-9rfg-defautl-rtdb.firebaseio.com** 
 
-Para las credenciales, debes dirigirte a configuración y luego a cuentas de servicio, luego en la tab de SDK de Firebase Admin dar clic en el botón **generar nueva clave privada**. Eso iniciará la descarga del archivo de credenciales, abrelo y pega cada una de las credenciales en el archivo .env en FIREBASE_CRDENTIALS 
+Para las credenciales, debes dirigirte a configuración y luego a cuentas de servicio, luego en la tab de SDK de Firebase Admin dar clic en el botón **generar nueva clave privada**. Eso iniciará la descarga del archivo de credenciales, abrelo y pega cada una de las credenciales en el archivo .env en FIREBASE_CRDENTIALS.
 
 ---
 
