@@ -125,20 +125,6 @@ const checkProximity = async () => {
             }
           }
         }
-
-        const thresholdsMet = THRESHOLDS.filter(t => distance <= t.meters).map(t => t.meters);
-        const exceededSet = new Set(thresholdsMet);
-        for (const notified of userNotified) {
-          if (!exceededSet.has(notified)) {
-            userNotified.delete(notified);
-          }
-        }
-      }
-
-      for (const [key] of notifiedThresholds) {
-        if (!users.some(u => getThresholdKey(u.identificationtype, u.identification) === key)) {
-          notifiedThresholds.delete(key);
-        }
       }
     }
   } catch (error) {
