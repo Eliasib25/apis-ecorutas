@@ -8,7 +8,7 @@ class User {
     const connection = await getConnection();
     try {
       const [rows] = await connection.query(
-        'SELECT * FROM citizen WHERE email = ? LIMIT 1',
+        'SELECT * FROM user WHERE email = ? LIMIT 1',
         [email]
       );
       return rows.length > 0 ? rows[0] : null;
@@ -21,7 +21,7 @@ class User {
     const connection = await getConnection();
     try {
       const [rows] = await connection.query(
-        'SELECT * FROM citizen WHERE identificationtype = ? AND identification = ? LIMIT 1',
+        'SELECT * FROM user WHERE identificationtype = ? AND identification = ? LIMIT 1',
         [identificationtype, identification]
       );
       return rows.length > 0 ? rows[0] : null;
@@ -34,7 +34,7 @@ class User {
     const connection = await getConnection();
     try {
       const [rows] = await connection.query(
-        'SELECT * FROM citizen WHERE userName = ? LIMIT 1',
+        'SELECT * FROM user WHERE userName = ? LIMIT 1',
         [userName]
       );
       return rows.length > 0 ? rows[0] : null;
@@ -47,7 +47,7 @@ class User {
     const connection = await getConnection();
     try {
       const [rows] = await connection.query(
-        'SELECT * FROM citizen WHERE id = ? LIMIT 1',
+        'SELECT * FROM user WHERE id = ? LIMIT 1',
         [id]
       );
       return rows.length > 0 ? rows[0] : null;
@@ -60,7 +60,7 @@ class User {
     const connection = await getConnection();
     try {
       const [rows] = await connection.query(
-        'SELECT * FROM citizen WHERE identificationtype = ? AND identification = ? LIMIT 1',
+        'SELECT * FROM user WHERE identificationtype = ? AND identification = ? LIMIT 1',
         [identificationtype, identification]
       );
       return rows.length > 0 ? rows[0] : null;
@@ -77,7 +77,7 @@ class User {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
 
       const [result] = await connection.query(
-        'INSERT INTO citizen (identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password, routesIdentification, last_latitude, last_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        'INSERT INTO user (identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password, routesIdentification, last_latitude, last_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [userData.identificationtype, userData.identification, userData.names, userData.lastnames, userData.email, userData.phone, userData.address, userData.neighborhood, userData.userName, hashedPassword, userData.routesIdentification, userData.last_latitude || null, userData.last_longitude || null]
       );
 
@@ -113,7 +113,7 @@ class User {
       values.push(identificationtype, identification);
 
       const [result] = await connection.query(
-        `UPDATE citizen SET ${setClause} WHERE identificationtype = ? AND identification = ?`,
+        `UPDATE user SET ${setClause} WHERE identificationtype = ? AND identification = ?`,
         values
       );
 

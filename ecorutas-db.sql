@@ -1,3 +1,7 @@
+CREATE DATABASE ecorutas;
+
+USE ecorutas;
+
 CREATE TABLE route(
   identification INT NOT NULL AUTO_INCREMENT,
   name VARCHAR(45) NOT NULL,
@@ -6,7 +10,7 @@ CREATE TABLE route(
   isActive VARCHAR(45) NOT NULL,
   PRIMARY KEY (identification));
 
-CREATE TABLE citizen (
+CREATE TABLE user (
   identificationtype ENUM('CC', 'TI', 'CE') NOT NULL,
   identification VARCHAR(45) NOT NULL,
   names VARCHAR(45) NOT NULL,
@@ -15,6 +19,7 @@ CREATE TABLE citizen (
   phone VARCHAR(45) NOT NULL,
   address VARCHAR(45) NOT NULL,
   neighborhood VARCHAR(45) NOT NULL,
+  role ENUM ('admin', 'citizen') DEFAULT 'citizen',
   userName VARCHAR(45) NOT NULL,
   password VARCHAR(255) NOT NULL,
   routesIdentification INT NULL,
@@ -25,6 +30,7 @@ CREATE TABLE citizen (
   CONSTRAINT citizenroute
     FOREIGN KEY (routesIdentification)
     REFERENCES route (identification));
+
 
 
 CREATE TABLE report (

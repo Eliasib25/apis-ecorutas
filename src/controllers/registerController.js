@@ -3,16 +3,7 @@ const User = require('../models/User');
 const Zone = require('../models/Zone');
 const jwt = require('jsonwebtoken');
 
-const generateToken = (user) => {
-  return jwt.sign(
-    {
-      identificationtype: user.identificationtype,
-      identification: user.identification
-    },
-    process.env.JWT_SECRET,
-    { expiresIn: '7d' }
-  );
-};
+
 
 const registerController = {
   register: async (req, res) => {
@@ -68,9 +59,6 @@ const registerController = {
         last_latitude: lat || null,
         last_longitude: lng || null
       });
-
-      // Generar token
-      const token = generateToken(newUser);
 
       res.status(201).json({
         success: true,
