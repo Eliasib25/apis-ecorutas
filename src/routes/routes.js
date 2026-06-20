@@ -5,6 +5,7 @@ const updateProfileController = require('../controllers/updateProfileController'
 const seedController = require('../controllers/seedController');
 const zoneController = require('../controllers/zoneController');
 const reportController = require('../controllers/reportController');
+const problemController = require('../controllers/problemController');
 const userRouteController = require('../controllers/userRouteController');
 const routeController = require('../controllers/routeController');
 const routeViewController = require('../controllers/routeViewController');
@@ -35,6 +36,11 @@ router.get('/zones', zoneController.list);
 // Reportes
 router.post('/reports', authMiddleware, reportController.createReport);
 router.get('/reports/types', reportController.getReportTypes);
+
+// Tipos de problema
+router.get('/problems', authMiddleware, problemController.list);
+router.post('/problems', authMiddleware, problemController.create);
+router.put('/problems/:id', authMiddleware, problemController.update);
 
 // Ruta del usuario
 router.get('/user/route', authMiddleware, userRouteController.getUserRoute);
