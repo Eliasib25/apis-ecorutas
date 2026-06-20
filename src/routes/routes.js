@@ -12,6 +12,7 @@ const routeController = require('../controllers/routeController');
 const routeViewController = require('../controllers/routeViewController');
 const userController = require('../controllers/userController');
 const reminderController = require('../controllers/reminderController');
+const noticeController = require('../controllers/noticeController');
 const authMiddleware = require('../middleware/auth');
 
 const router = express.Router();
@@ -49,6 +50,11 @@ router.put('/problems/:id', authMiddleware, problemController.update);
 router.get('/trucks', authMiddleware, truckController.list);
 router.post('/trucks', authMiddleware, truckController.create);
 router.patch('/trucks/:id', authMiddleware, truckController.update);
+
+// Avisos
+router.get('/notices', authMiddleware, noticeController.getAllNotices);
+router.post('/notices', authMiddleware, noticeController.createNotice);
+router.patch('/notices/:id', authMiddleware, noticeController.updateNotice);
 
 // Ruta del usuario
 router.get('/user/route', authMiddleware, userRouteController.getUserRoute);

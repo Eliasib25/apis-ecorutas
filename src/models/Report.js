@@ -38,13 +38,12 @@ class Report {
           r.identification AS id,
           CONCAT(u.names, ' ', u.lastnames) AS usuario,
           u.email AS correo,
-          p.name AS problema,
+          r.problem AS problema,
           r.address AS direccion,
           r.date AS fecha,
           r.state AS estado
         FROM report r
         INNER JOIN user u ON r.citizenidentificationtype = u.identificationtype AND r.citizenidentification = u.identification
-        INNER JOIN problem p ON r.type = p.identification
         ORDER BY r.date DESC`
       );
       return rows;
