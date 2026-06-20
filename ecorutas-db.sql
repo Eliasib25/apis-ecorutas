@@ -1,6 +1,14 @@
-CREATE DATABASE ecorutas;
+CREATE DATABASE IF NOT EXISTS ecorutas;
 
 USE ecorutas;
+
+CREATE TABLE truck (
+identification INT NOT NULL AUTO_INCREMENT,
+plate VARCHAR (45) NOT NULL,
+capacityKg DECIMAL(10, 2) NOT NULL,
+conditionTruck ENUM ('disponible', 'En mantenimiento', 'fuera de servicio') DEFAULT 'disponible',
+PRIMARY KEY (identification)
+);
 
 CREATE TABLE route(
   identification INT NOT NULL AUTO_INCREMENT,
@@ -8,7 +16,11 @@ CREATE TABLE route(
   frecuency ENUM('Lun-Mie-Vie', 'Mar-Jue-Sab') NULL,
   startTime VARCHAR(45) NOT NULL,
   isActive VARCHAR(45) NOT NULL,
-  PRIMARY KEY (identification));
+  truckIdentification INT NULL,
+  PRIMARY KEY (identification),
+  CONSTRAINT routetruck 
+    FOREIGN KEY (truckIdentification)
+    REFERENCES truck (identification));
 
 CREATE TABLE user (
   identificationtype ENUM('CC', 'TI', 'CE') NOT NULL,
@@ -31,20 +43,19 @@ CREATE TABLE user (
     FOREIGN KEY (routesIdentification)
     REFERENCES route (identification));
 
-
-
 CREATE TABLE report (
   identification INT(11) NOT NULL AUTO_INCREMENT,
   type ENUM('operacional', 'calidadservicio', 'administrativo', 'contaminacion', 'otro') NOT NULL,
   problem LONGTEXT NOT NULL,
   address VARCHAR(45) NOT NULL,
   date DATETIME NOT NULL,
+  state ENUM('Pendiente', 'Resuelto') NOT NULL DEFAULT 'Pendiente',
   citizenidentificationtype ENUM('CC', 'TI', 'CE') NOT NULL,
   citizenidentification VARCHAR(45) NOT NULL,
   PRIMARY KEY (identification),
   CONSTRAINT reportcitizen
     FOREIGN KEY (citizenidentificationtype , citizenidentification)
-    REFERENCES citizen (identificationtype , identification));
+    REFERENCES user (identificationtype , identification));
 
 
 CREATE TABLE zone (
@@ -55,3 +66,11 @@ CREATE TABLE zone (
   CONSTRAINT zoneroute
     FOREIGN KEY (routeidentification)
     REFERENCES route (identification));
+    
+CREATE TABLE notice (
+  identification INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR (255) NOT NULL,
+  description LONGTEXT NOT NULL,
+  date DATE NOT NULL,
+  PRIMARY KEY (identification)
+);

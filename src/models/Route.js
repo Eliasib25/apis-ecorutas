@@ -23,7 +23,7 @@ class Route {
     const connection = await getConnection();
     try {
       const [rows] = await connection.query(
-        'SELECT r.identification, r.name, r.frecuency, r.startTime, r.isActive FROM citizen c INNER JOIN route r ON r.identification = c.routesIdentification WHERE c.identificationtype = ? AND c.identification = ? LIMIT 1',
+        'SELECT r.identification, r.name, r.frecuency, r.startTime, r.isActive FROM user c INNER JOIN route r ON r.identification = c.routesIdentification WHERE c.identificationtype = ? AND c.identification = ? LIMIT 1',
         [identificationtype, identification]
       );
 
