@@ -42,10 +42,17 @@ CREATE TABLE user (
   CONSTRAINT citizenroute
     FOREIGN KEY (routesIdentification)
     REFERENCES route (identification));
+    
+CREATE TABLE problem (
+identification INT NOT NULL AUTO_INCREMENT, 
+name VARCHAR (255),
+state ENUM ('activo', 'inactivo'),
+PRIMARY KEY (identification)
+);
 
 CREATE TABLE report (
-  identification INT(11) NOT NULL AUTO_INCREMENT,
-  type ENUM('operacional', 'calidadservicio', 'administrativo', 'contaminacion', 'otro') NOT NULL,
+  identification INT NOT NULL AUTO_INCREMENT,
+  type INT NOT NULL,
   problem LONGTEXT NOT NULL,
   address VARCHAR(45) NOT NULL,
   date DATETIME NOT NULL,
@@ -53,6 +60,9 @@ CREATE TABLE report (
   citizenidentificationtype ENUM('CC', 'TI', 'CE') NOT NULL,
   citizenidentification VARCHAR(45) NOT NULL,
   PRIMARY KEY (identification),
+  CONSTRAINT reportproblem
+	FOREIGN KEY (type)
+    REFERENCES problem (identification),
   CONSTRAINT reportcitizen
     FOREIGN KEY (citizenidentificationtype , citizenidentification)
     REFERENCES user (identificationtype , identification));

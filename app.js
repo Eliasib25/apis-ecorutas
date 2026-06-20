@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const routes = require('./src/routes/routes');
 const { db } = require('./src/config/firebase');
 const { scheduleReminderNotifications } = require('./src/services/reminderNotification');
@@ -9,6 +10,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

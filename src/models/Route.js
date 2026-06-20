@@ -33,6 +33,24 @@ class Route {
     }
   }
 
+  static async assignTruck(routeId, truckId, connection) {
+    const shouldRelease = !connection;
+    const conn = connection || await getConnection();
+
+    try {
+      const [result] = await conn.query(
+        'UPDATE route SET truckIdentification = ? WHERE identification = ?',
+        [truckId, routeId]
+      );
+
+      return result.affectedRows > 0;
+    } finally {
+      if (shouldRelease) {
+        conn.release();
+      }
+    }
+  }
+
   static async getAllRoutes() {
     const connection = await getConnection();
     try {

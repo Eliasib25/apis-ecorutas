@@ -76,9 +76,11 @@ class User {
       // Hashear la contraseña
       const hashedPassword = await bcrypt.hash(userData.password, 10);
 
+      const role = userData.role || 'citizen';
+
       const [result] = await connection.query(
-        'INSERT INTO user (identificationtype, identification, names, lastnames, email, phone, address, neighborhood, userName, password, routesIdentification, last_latitude, last_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [userData.identificationtype, userData.identification, userData.names, userData.lastnames, userData.email, userData.phone, userData.address, userData.neighborhood, userData.userName, hashedPassword, userData.routesIdentification, userData.last_latitude || null, userData.last_longitude || null]
+        'INSERT INTO user (identificationtype, identification, names, lastnames, email, phone, address, neighborhood, role, userName, password, routesIdentification, last_latitude, last_longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [userData.identificationtype, userData.identification, userData.names, userData.lastnames, userData.email, userData.phone, userData.address, userData.neighborhood, role, userData.userName, hashedPassword, userData.routesIdentification || null, userData.last_latitude || null, userData.last_longitude || null]
       );
 
       return {
@@ -90,8 +92,9 @@ class User {
         phone: userData.phone,
         address: userData.address,
         neighborhood: userData.neighborhood,
+        role: role,
         userName: userData.userName,
-        routesIdentification: userData.routesIdentification,
+        routesIdentification: userData.routesIdentification || null,
         last_latitude: userData.last_latitude || null,
         last_longitude: userData.last_longitude || null
       };

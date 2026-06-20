@@ -1,5 +1,7 @@
 const Route = require('../models/Route');
 const Zone = require('../models/Zone');
+const Truck = require('../models/Truck');
+const User = require('../models/User');
 const { getConnection } = require('../config/database');
 
 const seedController = {
@@ -36,6 +38,35 @@ const seedController = {
         await Zone.create(zone, connection);
       }
 
+      const truck1Id = await Truck.create({
+        plate: 'ABC-123',
+        capacityKg: 10000,
+        conditionTruck: 'disponible'
+      }, connection);
+
+      const truck2Id = await Truck.create({
+        plate: 'DEF-456',
+        capacityKg: 8000,
+        conditionTruck: 'disponible'
+      }, connection);
+
+      await Route.assignTruck(route1Id, truck1Id, connection);
+      await Route.assignTruck(route2Id, truck2Id, connection);
+
+      const adminUser = await User.create({
+        identificationtype: 'CC',
+        identification: '10001000',
+        names: 'Admin',
+        lastnames: 'EcoRutas',
+        email: 'admin@ecorutas.com',
+        phone: '3001234567',
+        address: 'Calle 10 #5-20',
+        neighborhood: 'Centro',
+        role: 'admin',
+        userName: 'admin',
+        password: 'Admin123*'
+      });
+
       await connection.commit();
 
       return res.status(201).json({
@@ -46,7 +77,17 @@ const seedController = {
             { id: route1Id, name: 'Ruta 1' },
             { id: route2Id, name: 'Ruta 2' }
           ],
-          zones: zones
+          zones: zones,
+          trucks: [
+            { id: truck1Id, plate: 'ABC-123', capacityKg: 10000 },
+            { id: truck2Id, plate: 'DEF-456', capacityKg: 8000 }
+          ],
+          admin: {
+            identificationtype: 'CC',
+            identification: '10001000',
+            userName: 'admin',
+            role: 'admin'
+          }
         }
       });
     } catch (error) {

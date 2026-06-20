@@ -17,6 +17,9 @@ const router = express.Router();
 // Ruta para login
 router.post('/login', authController.login);
 
+// Ruta para login admin
+router.post('/admin/login', authController.adminLogin);
+
 // Ruta para registrar usuario
 router.post('/register', registerController.register);
 
