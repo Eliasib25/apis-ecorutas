@@ -35,8 +35,10 @@ router.get('/seed', seedController.seed);
 router.get('/zones', zoneController.list);
 
 // Reportes
-router.post('/reports', authMiddleware, reportController.createReport);
+router.get('/reports', authMiddleware, reportController.getAllReports);
 router.get('/reports/types', reportController.getReportTypes);
+router.post('/reports', authMiddleware, reportController.createReport);
+router.patch('/reports/:id/state', authMiddleware, reportController.updateReportState);
 
 // Tipos de problema
 router.get('/problems', authMiddleware, problemController.list);

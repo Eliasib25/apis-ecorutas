@@ -30,6 +30,42 @@ class Report {
     }
   }
 
+  static async getAllReports() {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        `SELECT 
+          r.identification AS id,
+          CONCAT(u.names, ' ', u.lastnames) AS usuario,
+          u.email AS correo,
+          p.name AS problema,
+          r.address AS direccion,
+          r.date AS fecha,
+          r.state AS estado
+        FROM report r
+        INNER JOIN user u ON r.citizenidentificationtype = u.identificationtype AND r.citizenidentification = u.identification
+        INNER JOIN problem p ON r.type = p.identification
+        ORDER BY r.date DESC`
+      );
+      return rows;
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async updateReportState(id, state) {
+    const connection = await getConnection();
+    try {
+      const [result] = await connection.query(
+        'UPDATE report SET state = ? WHERE identification = ?',
+        [state, id]
+      );
+      return result.affectedRows > 0;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async getReportTypes() {
     const connection = await getConnection();
     try {
