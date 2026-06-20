@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', routes);
 app.use('/api/', routes);
 
+
 // Ruta de prueba
 app.get('/api/health', (req, res) => {
   res.status(200).json({

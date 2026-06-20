@@ -33,8 +33,10 @@ router.get('/seed', seedController.seed);
 router.get('/zones', zoneController.list);
 
 // Reportes
-router.post('/reports', authMiddleware, reportController.createReport);
+router.get('/reports', authMiddleware, reportController.getAllReports);
 router.get('/reports/types', reportController.getReportTypes);
+router.post('/reports', authMiddleware, reportController.createReport);
+router.patch('/reports/:id/state', authMiddleware, reportController.updateReportState);
 
 // Ruta del usuario
 router.get('/user/route', authMiddleware, userRouteController.getUserRoute);
