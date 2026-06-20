@@ -1,7 +1,6 @@
 
 const User = require('../models/User');
 const Zone = require('../models/Zone');
-const jwt = require('jsonwebtoken');
 
 
 
@@ -65,7 +64,6 @@ const registerController = {
         message: 'Usuario registrado exitosamente',
         data: {
           user: newUser,
-          token: token
         }
       });
 
