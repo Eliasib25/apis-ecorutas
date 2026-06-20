@@ -6,6 +6,7 @@ const seedController = require('../controllers/seedController');
 const zoneController = require('../controllers/zoneController');
 const reportController = require('../controllers/reportController');
 const problemController = require('../controllers/problemController');
+const truckController = require('../controllers/truckController');
 const userRouteController = require('../controllers/userRouteController');
 const routeController = require('../controllers/routeController');
 const routeViewController = require('../controllers/routeViewController');
@@ -41,6 +42,11 @@ router.get('/reports/types', reportController.getReportTypes);
 router.get('/problems', authMiddleware, problemController.list);
 router.post('/problems', authMiddleware, problemController.create);
 router.put('/problems/:id', authMiddleware, problemController.update);
+
+// Camiones
+router.get('/trucks', authMiddleware, truckController.list);
+router.post('/trucks', authMiddleware, truckController.create);
+router.patch('/trucks/:id', authMiddleware, truckController.update);
 
 // Ruta del usuario
 router.get('/user/route', authMiddleware, userRouteController.getUserRoute);
