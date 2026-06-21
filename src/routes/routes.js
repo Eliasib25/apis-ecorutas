@@ -56,6 +56,13 @@ router.get('/notices', authMiddleware, noticeController.getAllNotices);
 router.post('/notices', authMiddleware, noticeController.createNotice);
 router.patch('/notices/:id', authMiddleware, noticeController.updateNotice);
 
+// Rutas CRUD
+router.get('/routes', authMiddleware, routeController.list);
+router.get('/routes/zones/available', authMiddleware, routeController.availableZones);
+router.get('/routes/trucks/available', authMiddleware, routeController.availableTrucks);
+router.post('/routes', authMiddleware, routeController.create);
+router.patch('/routes/:id', authMiddleware, routeController.update);
+
 // Ruta del usuario
 router.get('/user/route', authMiddleware, userRouteController.getUserRoute);
 router.post('/user/fcm-token', authMiddleware, userController.updateFCMToken);

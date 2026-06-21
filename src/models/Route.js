@@ -1,21 +1,122 @@
 const { getConnection } = require('../config/database');
 
 class Route {
-  static async create(routeData, connection) {
+
+  static async findAllWithDetails() {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        `SELECT
+          r.identification,
+          r.name,
+          r.frecuency,
+          r.startTime,
+          r.isActive,
+          r.truckIdentification,
+          t.plate AS truckPlate,
+          GROUP_CONCAT(z.name ORDER BY z.identification SEPARATOR ', ') AS zones
+        FROM route r
+        LEFT JOIN truck t ON t.identification = r.truckIdentification
+        LEFT JOIN zone z ON z.routeidentification = r.identification
+        GROUP BY r.identification, r.name, r.frecuency, r.startTime, r.isActive, r.truckIdentification, t.plate
+        ORDER BY r.identification DESC`
+      );
+
+      return rows.map(row => ({
+        ...row,
+        zones: row.zones ? row.zones.split(', ') : [],
+      }));
+    } finally {
+      connection.release();
+    }
+  }
+
+  static async createRoute(routeData, zoneIds, connection) {
     const shouldRelease = !connection;
     const conn = connection || await getConnection();
 
     try {
-      await conn.query(
-        'INSERT INTO route (identification, name, frecuency, startTime, isActive) VALUES (?, ?, ?, ?, ?)',
-        [routeData.identification, routeData.name, routeData.frecuency, routeData.startTime, routeData.isActive]
+      const [result] = await conn.query(
+        'INSERT INTO route (name, frecuency, startTime, isActive, truckIdentification) VALUES (?, ?, ?, ?, ?)',
+        [
+          routeData.name,
+          routeData.frecuency,
+          routeData.startTime,
+          routeData.isActive || '1',
+          routeData.truckIdentification || null,
+        ]
       );
 
-      return routeData.identification;
+      const newRouteId = result.insertId;
+
+      if (zoneIds && zoneIds.length > 0) {
+        await conn.query(
+          'UPDATE zone SET routeidentification = ? WHERE identification IN (?)',
+          [newRouteId, zoneIds]
+        );
+      }
+
+      return newRouteId;
     } finally {
       if (shouldRelease) {
         conn.release();
       }
+    }
+  }
+
+  static async updateRoute(id, routeData, zoneIds, connection) {
+    const shouldRelease = !connection;
+    const conn = connection || await getConnection();
+
+    try {
+      const fields = {};
+      if (routeData.name !== undefined) fields.name = routeData.name;
+      if (routeData.frecuency !== undefined) fields.frecuency = routeData.frecuency;
+      if (routeData.startTime !== undefined) fields.startTime = routeData.startTime;
+      if (routeData.isActive !== undefined) fields.isActive = routeData.isActive;
+      if (routeData.truckIdentification !== undefined) {
+        fields.truckIdentification = routeData.truckIdentification || null;
+      }
+
+      if (Object.keys(fields).length > 0) {
+        const setClause = Object.keys(fields).map(f => `${f} = ?`).join(', ');
+        const values = Object.values(fields);
+        values.push(id);
+        await conn.query(`UPDATE route SET ${setClause} WHERE identification = ?`, values);
+      }
+
+      if (zoneIds !== undefined) {
+        await conn.query(
+          'UPDATE zone SET routeidentification = NULL WHERE routeidentification = ?',
+          [id]
+        );
+
+        if (zoneIds.length > 0) {
+          await conn.query(
+            'UPDATE zone SET routeidentification = ? WHERE identification IN (?)',
+            [id, zoneIds]
+          );
+        }
+      }
+
+      return true;
+    } finally {
+      if (shouldRelease) {
+        conn.release();
+      }
+    }
+  }
+
+  static async findById(id) {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        'SELECT * FROM route WHERE identification = ? LIMIT 1',
+        [id]
+      );
+      return rows.length > 0 ? rows[0] : null;
+    } finally {
+      connection.release();
     }
   }
 
