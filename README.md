@@ -41,21 +41,27 @@ Importa el script `ecorutas-db.sql` en tu servidor MySQL. Este archivo crea la b
 Copia `.env.example` como `.env` y completa los valores:
 
 ```env
-# Servidor
-PORT=tu_puerto
+##Server 
+PORT = el puerto que deseas usar para tu servidor, por ejemplo: 3000
 
-# Base de datos MySQL
-DB_HOST=tu_host
-DB_USER=tu_usuario
-DB_PASSWORD=tu_contraseña
-DB_NAME=nombre_tu_base_datos
-DB_PORT=tu_puerto
+##Database
+DB_HOST = el host de tu base de datos
+DB_USER = el usuario de tu base de datos
+DB_PASSWORD = la contraseña de tu base de datos
+DB_NAME = el nombre de tu base de datos
+DB_PORT = el puerto de tu base de datos
 
-# JWT
-JWT_SECRET=tu_clave_secreta
+##JWT
+JWT_SECRET = tu_clave_secreta_aqui
 
-# Firebase Realtime Database
-FIREBASE_DATABASE_URL=https://tu-proyecto.firebaseio.com
+##Firebase Real-time Database
+FIREBASE_DATABASE_URL = La URL de tu base de datos de Firebas Real-time Database
+
+##SendPulse API
+SENDPULSE_API_USER_ID = tu_api_user_id_de_sendpulse
+SENDPULSE_API_SECRET = tu_api_key_estatico_de_sendpulse
+EMAIL_FROM = tu_correo_verificado_en_sendpulse
+EMAIL_FROM_NAME = Nombre del Remitente
 
 ##Firebase credentials
 FIREBASE_CREDENTIALS = {
@@ -71,6 +77,12 @@ FIREBASE_CREDENTIALS = {
   "client_x509_cert_url": "tu-firebase-client-cert-url",
   "universe_domain": "tu-firebase-universe-domain"
 }
+
+
+##Sendpulse API
+SENDPULSE_API_SECRET = tu_api_key_estatico_de_sendpulse
+EMAIL_FROM_NAME = Nombre del Remitente
+EMAIL_FROM = tu_correo_verificado_en_sendpulse
 ```
 **Proyecto Firebase:**
 
