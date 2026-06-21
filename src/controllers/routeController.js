@@ -195,11 +195,20 @@ const routeController = {
 
   availableZones: async (req, res) => {
     try {
+      const { routeId } = req.query;
       const connection = await getConnection();
       try {
-        const [rows] = await connection.query(
-          'SELECT identification, name FROM zone WHERE routeidentification IS NULL ORDER BY name'
-        );
+        let query = 'SELECT identification, name FROM zone WHERE routeidentification IS NULL';
+        const params = [];
+
+        if (routeId) {
+          query += ' OR routeidentification = ?';
+          params.push(parseInt(routeId));
+        }
+
+        query += ' ORDER BY name';
+
+        const [rows] = await connection.query(query, params);
 
         return res.status(200).json({
           success: true,
