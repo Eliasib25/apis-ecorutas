@@ -1,5 +1,6 @@
 const Report = require('../models/Report');
 const User = require('../models/User');
+const { sendReportResponseEmail } = require('../services/emailService');
 
 const VALID_STATES = ['pendiente', 'resuelto'];
 
@@ -38,7 +39,7 @@ const reportController = {
   updateReportState: async (req, res) => {
     try {
       const { id } = req.params;
-      const { state } = req.body;
+      const { state, respuesta } = req.body;
 
       if (!state || !VALID_STATES.includes(state.toLowerCase())) {
         return res.status(400).json({
@@ -56,6 +57,22 @@ const reportController = {
           success: false,
           message: 'Reporte no encontrado',
         });
+      }
+
+      if (normalizedState === 'Resuelto' && respuesta && respuesta.trim()) {
+        Report.getReportWithUser(id)
+          .then((reportData) => {
+            if (reportData && reportData.correo) {
+              return sendReportResponseEmail({
+                to: reportData.correo,
+                userName: reportData.usuario,
+                response: respuesta.trim(),
+              });
+            }
+          })
+          .catch((emailError) => {
+            console.error('Error al enviar correo de respuesta:', emailError);
+          });
       }
 
       return res.status(200).json({

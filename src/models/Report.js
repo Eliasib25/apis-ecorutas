@@ -65,6 +65,26 @@ class Report {
     }
   }
 
+  static async getReportWithUser(id) {
+    const connection = await getConnection();
+    try {
+      const [rows] = await connection.query(
+        `SELECT 
+          r.identification AS id,
+          r.state AS estado,
+          u.email AS correo,
+          CONCAT(u.names, ' ', u.lastnames) AS usuario
+        FROM report r
+        INNER JOIN user u ON r.citizenidentificationtype = u.identificationtype AND r.citizenidentification = u.identification
+        WHERE r.identification = ?`,
+        [id]
+      );
+      return rows[0] || null;
+    } finally {
+      connection.release();
+    }
+  }
+
   static async getReportTypes() {
     const connection = await getConnection();
     try {
