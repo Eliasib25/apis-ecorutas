@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173'],
+  origin: ['http://localhost:5173', 'https://apis-ecorutas-083211715d4f.herokuapp.com/api'],
   credentials: true
 }));
 app.use(express.json());
