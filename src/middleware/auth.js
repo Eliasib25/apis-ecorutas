@@ -25,7 +25,7 @@ const authMiddleware = (req, res, next) => {
     // Verificar y decodificar el token
     const decoded = jwt.verify(
       token,
-      process.env.JWT_SECRET || 'tu_clave_secreta_super_segura_cambiar_en_produccion'
+      process.env.JWT_SECRET 
     );
 
     // Agregar el usuario al request

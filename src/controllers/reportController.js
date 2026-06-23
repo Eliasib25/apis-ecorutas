@@ -145,26 +145,6 @@ const reportController = {
     }
   },
 
-  getReportTypes: async (req, res) => {
-    try {
-      const types = await Report.getReportTypes();
-
-      return res.status(200).json({
-        success: true,
-        message: 'Tipos de reporte obtenidos correctamente',
-        data: {
-          types: types
-        }
-      });
-    } catch (error) {
-      console.error('Error en getReportTypes:', error);
-      return res.status(500).json({
-        success: false,
-        message: 'Error en el servidor',
-        error: error.message
-      });
-    }
-  }
 };
 
 module.exports = reportController;
