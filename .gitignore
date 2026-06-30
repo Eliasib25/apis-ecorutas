@@ -9,3 +9,8 @@ firebase-credentials.json
 
 # mcp 
 opencode.json
+
+# documents
+
+*.docx
+*.xlsx

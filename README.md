@@ -157,27 +157,16 @@ apis-ecorutas/
     │   ├── firebase.js          # Inicialización del SDK de Firebase Admin
     │   └── firebase-credentials.json  # Credenciales del proyecto Firebase
     ├── controllers/             # Lógica de negocio de cada endpoint
-    │   ├── authController.js
-    │   ├── registerController.js
-    │   ├── updateProfileController.js
-    │   ├── seedController.js
-    │   ├── zoneController.js
-    │   ├── reportController.js
-    │   ├── routeController.js
-    │   ├── routeViewController.js
-    │   ├── userRouteController.js
-    │   ├── userController.js
-    │   └── reminderController.js
+    |
     ├── models/                  # Modelos de datos (acceso a tablas)
-    │   ├── User.js
-    │   ├── Route.js
-    │   ├── Zone.js
-    │   └── Report.js
+    |
     ├── middleware/
     │   └── auth.js              # Middleware de autenticación vía JWT
     ├── routes/
     │   └── routes.js            # Definición de todos los endpoints de la API
     ├── services/
+    |   |__emailService          # Lógica para el envío de emails
+    |   |__ proximityNotification # Lógica para el envío de notificaciones de proximidad
     │   ├── routeSimulator.js    # Lógica de simulación/generación de rutas
     │   └── reminderNotification.js # Servicio de notificaciones FCM por recordatorio
     └── views/
@@ -245,118 +234,3 @@ Base URL: `/api`
 
 ---
 
-## Notificaciones FCM con Recordatorio
-
-### Descripción
-
-El sistema incluye un servicio automático de notificaciones para recordar a los usuarios sacar la basura antes de que pase el camión. Las notificaciones se envían 30 minutos antes de la hora de inicio de cada ruta.
-
-### Características
-
-1. **Notificaciones automáticas diarias** a las 05:50 AM
-2. **Personalización por frecuencia**: Las rutas se ejecutan en específicos días de la semana (Lun-Mié-Vie o Mar-Jue-Sáb)
-3. **Firebase Cloud Messaging (FCM)**: Integración con Firebase para enviar notificaciones push
-4. **Tokens FCM**: Cada usuario puede registrar su token para recibir notificaciones
-5. **Demo manual**: Botón en la vista de rutas para enviar notificaciones de forma manual
-
-### Flujo de funcionamiento
-
-#### 1. Registro del token FCM
-
-El usuario debe enviar su token FCM al servidor:
-
-```bash
-curl -X POST http://localhost:3000/api/user/fcm-token \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"fcm_token": "eB0_bVHqZ3k:APA91bF..."}'
-```
-
-**Respuesta exitosa:**
-```json
-{
-  "success": true,
-  "message": "Token FCM actualizado correctamente",
-  "data": {
-    "fcm_token": "eB0_bVHqZ3k:APA91bF..."
-  }
-}
-```
-
-#### 2. Ejecución automática
-
-- Diariamente a las **05:50 AM** se ejecuta el servicio `scheduleReminderNotifications()`
-- El servicio obtiene el día actual en español (ej: "lun", "mar")
-- Busca todas las rutas activas que se ejecutan ese día
-- Para cada ruta, obtiene los usuarios asociados con tokens FCM válidos
-- Calcula el tiempo de espera: `startTime - 30 minutos`
-- Programa el envío de notificación para esa hora exacta
-
-#### 3. Contenido de la notificación
-
-**Título:** "Hoy pasa el camión 🚛"
-**Cuerpo:** "No olvides sacar tu basura"
-
-#### 4. Envío manual (Demo)
-
-Para fines de demostración, es posible enviar una notificación de forma manual:
-
-```bash
-curl -X POST http://localhost:3000/api/routes/1/send-reminder \
-  -H "Content-Type: application/json"
-```
-
-**Respuesta:**
-```json
-{
-  "success": true,
-  "message": "Notificación enviada a 5 usuario(s)",
-  "data": {
-    "tokensCount": 5
-  }
-}
-```
-
-### Configuración requerida
-
-1. **Firebase Realtime Database** debe estar configurada (credenciales en `src/config/firebase-credentials.json`)
-2. **node-cron** está instalado para la programación de tareas
-3. **Firebase Admin SDK** está inicializado correctamente
-4. Los usuarios deben tener un **token FCM válido** registrado en la BD
-
-### Estructura de datos
-
-#### Token FCM en la tabla `citizen`
-
-```sql
-ALTER TABLE citizen ADD COLUMN fcm_token VARCHAR(255) NULL;
-```
-
-#### Mapeo de frecuencias de ruta
-
-- `Lun-Mie-Vie`: Se ejecuta lunes, miércoles y viernes
-- `Mar-Jue-Sab`: Se ejecuta martes, jueves y sábado
-
-### Monitoreo
-
-El servicio registra sus operaciones en la consola:
-
-```
-✓ Servicio de recordatorios programado para 05:50 AM diarios
-📅 Verificación de recordatorios - Día: lun - 9/6/2026 5:50:00 AM
-Encontradas 2 rutas activas para hoy
-⏰ Programando notificación para Ruta Centro en 1800s
-📢 Enviando notificación para: Ruta Centro
-✓ Notificaciones enviadas: 5 éxito, 0 fallo
-```
-
-### Troubleshooting
-
-| Problema | Causa | Solución |
-|----------|-------|----------|
-| "No hay usuarios con tokens para esta ruta" | Usuarios sin token FCM registrado | El usuario debe hacer POST a `/api/user/fcm-token` |
-| Notificaciones no llegan | Token FCM inválido o expirado | Renovar el token en el cliente |
-| Servicio no inicia | Firebase no configurado | Verificar credenciales en `firebase-credentials.json` |
-| "La hora de envío ya pasó" | startTime es anterior a las 05:50 AM | Configurar startTime posterior a 05:50 AM |
-
- |
