@@ -6,7 +6,7 @@ CREATE TABLE truck (
 identification INT NOT NULL AUTO_INCREMENT,
 plate VARCHAR (45) NOT NULL,
 capacityKg DECIMAL(10, 2) NOT NULL,
-conditionTruck ENUM ('disponible', 'asignado' 'En mantenimiento', 'fuera de servicio') DEFAULT 'disponible',
+conditionTruck ENUM ('disponible', 'asignado', 'En mantenimiento', 'fuera de servicio') DEFAULT 'disponible',
 PRIMARY KEY (identification)
 );
 

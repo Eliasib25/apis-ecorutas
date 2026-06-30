@@ -9,8 +9,9 @@ API REST para el proyecto **EcoRutas**, desarrollada con Node.js, Express y MySQ
 2. [Configuración](#configuración)
 3. [Uso](#uso)
 4. [Despliegue con Docker](#despliegue-con-docker)
-5. [Estructura del proyecto](#estructura-del-proyecto)
-6. [Endpoints](#endpoints)
+5. [Pruebas](#pruebas)
+6. [Estructura del proyecto](#estructura-del-proyecto)
+7. [Endpoints](#endpoints)
 
 ---
 
@@ -138,64 +139,89 @@ La API quedará disponible en `http://localhost:8080`.
 
 ---
 
+## Pruebas
+
+El proyecto utiliza **Jest** como framework de pruebas con una estrategia de **mock centralizado** de la base de datos. Cada modelo se prueba de forma aislada sin necesidad de una BD real ni Docker.
+
+### Archivos de prueba
+
+```
+apis-ecorutas/
+├── jest.config.js                  # Configuracion de Jest
+└── src/test/
+    ├── setup.js                    # Funciones mock compartidas
+    ├── User.test.js                # 15 casos (HU01, HU02, HU03, HU20)
+    ├── Truck.test.js               # 13 casos (HU10, HU13, HU21, HU22, HU23)
+    ├── Route.test.js               # 11 casos (HU06, HU10, HU11, HU12, HU13)
+    ├── Zone.test.js                # 3 casos (HU01, HU06)
+    ├── Problem.test.js             # 7 casos (HU14, HU15)
+    ├── Notice.test.js              # 10 casos (HU05, HU08, HU18, HU19)
+    └── Report.test.js              # 5 casos (HU09, HU17)
+```
+
+**Total: 69 pruebas en 7 suites**
+
+### Comandos
+
+| Comando | Descripcion |
+|---------|-------------|
+| `npm test` | Ejecuta todas las 69 pruebas |
+| `npx jest --verbose` | Todas las pruebas con detalle por caso |
+| `npx jest src/test/<ModelName>.test.js` | Solo pruebas para un modelo en específico |
+| `npx jest -t "HU01-01"` | Un caso especifico por nombre |
+| `npx jest --watch` | Modo watch (re-ejecuta al guardar) |
+
+---
+
 ## Estructura del proyecto
 
 ```
 apis-ecorutas/
 ├── app.js                       # Punto de entrada: configura Express, middlewares y rutas
+├── jest.config.js               # Configuracion de Jest para pruebas unitarias
 ├── package.json                 # Dependencias y scripts npm
 ├── .env                         # Variables de entorno (no se versiona)
 ├── .env.example                 # Plantilla de variables de entorno
 ├── ecorutas-db.sql              # Script SQL para crear la base de datos
 ├── Dockerfile                   # Imagen Docker de la API
-├── docker-compose.yml           # Orquestación: MySQL + API + Nginx
+├── docker-compose.yml           # Orquestacion: MySQL + API + Nginx
 ├── nginx/
-│   └── default.conf             # Configuración del reverse proxy (Nginx)
+│   └── default.conf             # Configuracion del reverse proxy (Nginx)
 └── src/
     ├── config/
-    │   ├── database.js          # Conexión a MySQL
-    │   ├── firebase.js          # Inicialización del SDK de Firebase Admin
+    │   ├── database.js          # Conexion a MySQL
+    │   ├── firebase.js          # Inicializacion del SDK de Firebase Admin
     │   └── firebase-credentials.json  # Credenciales del proyecto Firebase
-    ├── controllers/             # Lógica de negocio de cada endpoint
-    │   ├── authController.js
-    │   ├── registerController.js
-    │   ├── updateProfileController.js
-    │   ├── seedController.js
-    │   ├── zoneController.js
-    │   ├── reportController.js
-    │   ├── routeController.js
-    │   ├── routeViewController.js
-    │   ├── userRouteController.js
-    │   ├── userController.js
-    │   └── reminderController.js
+    ├── controllers/             # Logica de negocio de cada endpoint
+    |
     ├── models/                  # Modelos de datos (acceso a tablas)
-    │   ├── User.js
-    │   ├── Route.js
-    │   ├── Zone.js
-    │   └── Report.js
     ├── middleware/
-    │   └── auth.js              # Middleware de autenticación vía JWT
+    │   └── auth.js              # Middleware de autenticacion via JWT
     ├── routes/
-    │   └── routes.js            # Definición de todos los endpoints de la API
+    │   └── routes.js            # Definicion de todos los endpoints de la API
     ├── services/
-    │   ├── routeSimulator.js    # Lógica de simulación/generación de rutas
-    │   └── reminderNotification.js # Servicio de notificaciones FCM por recordatorio
-    └── views/
-        └── routes/
-            └── index.html       # Vista HTML servida por la API
+    │   ├── routeSimulator.js    # Logica de simulacion/generacion de rutas
+    │   ├── reminderNotification.js # Servicio de notificaciones FCM por recordatorio
+    │   ├── proximityNotification.js # Servicio de notificaciones de proximidad
+    │   └── emailService.js      # Servicio de envio de correos
+    ├── views/
+    │   └── routes/
+    │       └── index.html       # Vista HTML servida por la API
+    └── test/                    # Pruebas unitarias con Jest
 ```
 
 ### Descripción de carpetas
 
-| Carpeta | Propósito |
+| Carpeta | Proposito |
 |---------|-----------|
-| `src/config/` | Configuración de servicios externos (MySQL, Firebase). |
+| `src/config/` | Configuracion de servicios externos (MySQL, Firebase). |
 | `src/controllers/` | Manejan las peticiones HTTP y devuelven las respuestas. |
 | `src/models/` | Encapsulan el acceso y las consultas a la base de datos. |
-| `src/middleware/` | Funciones que se ejecutan antes de los controladores (p. ej. verificación de JWT). |
+| `src/middleware/` | Funciones que se ejecutan antes de los controladores (p. ej. verificacion de JWT). |
 | `src/routes/` | Define las URLs/endpoints y los asocia a los controladores. |
-| `src/services/` | Lógica auxiliar o de soporte (simuladores, integraciones, etc.). |
+| `src/services/` | Logica auxiliar o de soporte (simuladores, integraciones, etc.). |
 | `src/views/` | Plantillas/archivos HTML servidos por la API. |
+| `src/test/` | Pruebas unitarias de modelos con Jest y mock de BD. |
 
 ---
 
@@ -244,119 +270,3 @@ Base URL: `/api`
 | `GET`  | `/health` | No | Verifica que el servidor está funcionando.
 
 ---
-
-## Notificaciones FCM con Recordatorio
-
-### Descripción
-
-El sistema incluye un servicio automático de notificaciones para recordar a los usuarios sacar la basura antes de que pase el camión. Las notificaciones se envían 30 minutos antes de la hora de inicio de cada ruta.
-
-### Características
-
-1. **Notificaciones automáticas diarias** a las 05:50 AM
-2. **Personalización por frecuencia**: Las rutas se ejecutan en específicos días de la semana (Lun-Mié-Vie o Mar-Jue-Sáb)
-3. **Firebase Cloud Messaging (FCM)**: Integración con Firebase para enviar notificaciones push
-4. **Tokens FCM**: Cada usuario puede registrar su token para recibir notificaciones
-5. **Demo manual**: Botón en la vista de rutas para enviar notificaciones de forma manual
-
-### Flujo de funcionamiento
-
-#### 1. Registro del token FCM
-
-El usuario debe enviar su token FCM al servidor:
-
-```bash
-curl -X POST http://localhost:3000/api/user/fcm-token \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{"fcm_token": "eB0_bVHqZ3k:APA91bF..."}'
-```
-
-**Respuesta exitosa:**
-```json
-{
-  "success": true,
-  "message": "Token FCM actualizado correctamente",
-  "data": {
-    "fcm_token": "eB0_bVHqZ3k:APA91bF..."
-  }
-}
-```
-
-#### 2. Ejecución automática
-
-- Diariamente a las **05:50 AM** se ejecuta el servicio `scheduleReminderNotifications()`
-- El servicio obtiene el día actual en español (ej: "lun", "mar")
-- Busca todas las rutas activas que se ejecutan ese día
-- Para cada ruta, obtiene los usuarios asociados con tokens FCM válidos
-- Calcula el tiempo de espera: `startTime - 30 minutos`
-- Programa el envío de notificación para esa hora exacta
-
-#### 3. Contenido de la notificación
-
-**Título:** "Hoy pasa el camión 🚛"
-**Cuerpo:** "No olvides sacar tu basura"
-
-#### 4. Envío manual (Demo)
-
-Para fines de demostración, es posible enviar una notificación de forma manual:
-
-```bash
-curl -X POST http://localhost:3000/api/routes/1/send-reminder \
-  -H "Content-Type: application/json"
-```
-
-**Respuesta:**
-```json
-{
-  "success": true,
-  "message": "Notificación enviada a 5 usuario(s)",
-  "data": {
-    "tokensCount": 5
-  }
-}
-```
-
-### Configuración requerida
-
-1. **Firebase Realtime Database** debe estar configurada (credenciales en `src/config/firebase-credentials.json`)
-2. **node-cron** está instalado para la programación de tareas
-3. **Firebase Admin SDK** está inicializado correctamente
-4. Los usuarios deben tener un **token FCM válido** registrado en la BD
-
-### Estructura de datos
-
-#### Token FCM en la tabla `citizen`
-
-```sql
-ALTER TABLE citizen ADD COLUMN fcm_token VARCHAR(255) NULL;
-```
-
-#### Mapeo de frecuencias de ruta
-
-- `Lun-Mie-Vie`: Se ejecuta lunes, miércoles y viernes
-- `Mar-Jue-Sab`: Se ejecuta martes, jueves y sábado
-
-### Monitoreo
-
-El servicio registra sus operaciones en la consola:
-
-```
-✓ Servicio de recordatorios programado para 05:50 AM diarios
-📅 Verificación de recordatorios - Día: lun - 9/6/2026 5:50:00 AM
-Encontradas 2 rutas activas para hoy
-⏰ Programando notificación para Ruta Centro en 1800s
-📢 Enviando notificación para: Ruta Centro
-✓ Notificaciones enviadas: 5 éxito, 0 fallo
-```
-
-### Troubleshooting
-
-| Problema | Causa | Solución |
-|----------|-------|----------|
-| "No hay usuarios con tokens para esta ruta" | Usuarios sin token FCM registrado | El usuario debe hacer POST a `/api/user/fcm-token` |
-| Notificaciones no llegan | Token FCM inválido o expirado | Renovar el token en el cliente |
-| Servicio no inicia | Firebase no configurado | Verificar credenciales en `firebase-credentials.json` |
-| "La hora de envío ya pasó" | startTime es anterior a las 05:50 AM | Configurar startTime posterior a 05:50 AM |
-
- |
