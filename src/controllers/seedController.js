@@ -11,7 +11,7 @@ const seedController = {
     try {
       await connection.beginTransaction();
 
-      const route1Id = await Route.create({
+      const route1Id = await Route.createRoute({
         identification: 1,
         name: 'Ruta 1',
         frecuency: 'Lun-Mie-Vie',
@@ -19,7 +19,7 @@ const seedController = {
         isActive: 'si'
       }, connection);
 
-      const route2Id = await Route.create({
+      const route2Id = await Route.createRoute({
         identification: 2,
         name: 'Ruta 2',
         frecuency: 'Mar-Jue-Sab',
@@ -61,7 +61,7 @@ const seedController = {
         email: 'admin@ecorutas.com',
         phone: '3001234567',
         address: 'Calle 10 #5-20',
-        neighborhood: 'Centro',
+        neighborhood: 'Florencia',
         role: 'admin',
         userName: 'admin',
         password: 'Admin123*'
