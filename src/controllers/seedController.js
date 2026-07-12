@@ -50,8 +50,8 @@ const seedController = {
         conditionTruck: 'disponible'
       }, connection);
 
-      await Route.assignTruck(route1Id, truck1Id, connection);
-      await Route.assignTruck(route2Id, truck2Id, connection);
+      await Route.assignTruck(route1Id, truck1Id.identification, connection);
+      await Route.assignTruck(route2Id, truck2Id.identification, connection);
 
       const adminUser = await User.create({
         identificationtype: 'CC',
