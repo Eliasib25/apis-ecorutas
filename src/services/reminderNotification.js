@@ -62,7 +62,7 @@ const getFCMTokensForRoute = async (routeId) => {
   const connection = await getConnection();
   try {
     const [users] = await connection.query(
-      'SELECT fcm_token FROM citizen WHERE routesIdentification = ? AND fcm_token IS NOT NULL AND fcm_token != ?',
+      'SELECT fcm_token FROM user WHERE routesIdentification = ? AND fcm_token IS NOT NULL AND fcm_token != ?',
       [routeId, '']
     );
 
