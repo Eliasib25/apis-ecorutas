@@ -49,7 +49,7 @@ const getUsersWithLocationAndToken = async (routeId) => {
   try {
     const [users] = await connection.query(
       `SELECT identificationtype, identification, fcm_token, last_latitude, last_longitude
-       FROM citizen
+       FROM user
        WHERE routesIdentification = ?
          AND fcm_token IS NOT NULL AND fcm_token != ''
          AND last_latitude IS NOT NULL
